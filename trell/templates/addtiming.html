@@ -1,0 +1,99 @@
+{% include "base.html" %}
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <li style="color:red">{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+<Div style=" max-width: 70rem; margin: auto; margin-bottom: 5vh; background-color: rgb(65, 43, 43); color: antiquewhite; box-shadow: 0 20px 30px 0 rgba(1, 24, 24, 0.3);
+    padding: 10px;
+    border: inherit;
+    border-radius: 5px;" class="heading">
+  <h3 style="padding-top: 3vh; padding-bottom: 3vh; text-align: center; font-family: monospace;" > timings </h3>
+</Div>
+<div style="width: 100%;
+    height: auto;
+    max-width: 70rem;
+    margin: auto; border: 3px solid rgb(29, 25, 25); border-radius: 15px;
+box-shadow: 0 20px 30px 0 rgba(23, 121, 121, 0.3);">
+<form style="padding: 15px 15px 15px 15px;" action="/add-timing/{{id}}" method="POST">
+    <div class="form-group">
+    <label for="title">Timing</label>
+    <input type="text" class="form-control" name="timing" aria-describedby="emailHelp" placeholder="timing" required="true">
+  </div>
+  <div class="form-group">
+    <label for="exampleInputPassword1">Price</label>
+    <input type="text" class="form-control" name="price" required="true">
+  </div>
+  <div class="form-group">
+    <label for="exampleInputPassword1">Tickets</label>
+    <input type="text" class="form-control" name="tickets" required="true">
+  </div>
+  
+  <button type="submit" class="btn btn-success">add</button>
+</form>
+</div>
+<br>
+<br>
+<div id="allTImings" style="width: 100%;text-align: center;
+            max-width: 70rem;
+            margin: auto;
+            margin-top: 20px;
+            box-shadow: 0 20px 30px 0 rgba(6, 7, 7, 0.3);" class="history">
+<h3 style="text-align: center; font-family: monospace; font-weight: bolder;"><u>all timings for this movie</u></h3><br>
+
+
+{% for i in all_timings %}
+    {{i.timing}}
+    <br>
+    <b>Price: </b> {{i.price}} rupees
+    <br>
+    <b> Number of available tickets (after purchasing) ~ {{i.tickets}} </b>
+    <br>
+    {%if i.tickets != "0" %}
+    <b>
+      <a href="/purchase-ticket/{{i.id}}" style="color:green">purchase ticket</a></b> (for a timing that is suitable for you)
+    
+    {%endif%}
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+    <div style="width: 100%;text-align: center;
+                max-width: 70rem;
+                margin: auto;
+                margin-top: 20px;
+                box-shadow: 0 20px 30px 0 rgba(6, 7, 7, 0.3);" class="history"><br>
+    <canvas id="{{i.id}}" width="400" height="100"></canvas>
+    <br><br>
+    </div>
+
+    <script>
+    new Chart(document.getElementById("{{i.id}}"), {
+        type: 'pie',
+        data: {
+          labels: ["available tickets", "purchased tickets"],
+          datasets: [{
+            label: "Population (millions)",
+            backgroundColor: ["green", "red"],
+            data: [{{i.tickets}}, {{purchased_tickets}}]
+          }]
+        },
+        options: {
+          title: {
+            display: true,
+            text: 'Tickets report'
+          }
+        }
+    });
+    </script>
+    <hr>
+{% endfor %}
+</div>
+
+<br><br>
+
